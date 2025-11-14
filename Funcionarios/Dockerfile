@@ -17,7 +17,7 @@ RUN mvn -e -DskipTests package
 # ESTÁGIO 2: Execução (Runtime)
 # CORRIGIDO: Usa a imagem oficial OpenJDK 17-jre-slim.
 
-FROM openjdk:17-alpine
+FROM eclipse-temurin:17-jre-focal
 WORKDIR /app
 
 # Copia o arquivo JAR gerado na etapa de build
@@ -28,5 +28,6 @@ EXPOSE 8080
 
 # Comando para iniciar o JAR
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
 
 
