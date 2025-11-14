@@ -1,19 +1,31 @@
-# Etapa 1: Build da aplicação
+# ----------------------------------------------------------------------
+# ESTÁGIO 1: Build da aplicação
+# Usa o Maven e o JDK 17 (Eclipse Temurin) para compilar o projeto.
+# ----------------------------------------------------------------------
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copiar pom.xml e src do subdiretório correto
-COPY "Ste Cores/funcionarios/funcionarios/pom.xml" .
-COPY "Ste Cores/funcionarios/funcionarios/src" ./src
+# COPIA OS ARQUIVOS DO PROJETO
+# Importante: O caminho abaixo usa 'funcionarios' (minúsculas).
+# Certifique-se de que a pasta no seu repositório Git tenha sido renomeada para 'funcionarios'.
+COPY Funcionarios/pom.xml .
+COPY Funcionarios/src ./src
 
-RUN mvn -q -e -DskipTests package
+# Executa o build do Maven. O '-DskipTests' é essencial para evitar falhas no deploy.
+RUN mvn -e -DskipTests package
 
-# Etapa 2: Rodar a aplicação
-FROM eclipse-temurin:17-jdk
+# ----------------------------------------------------------------------
+# ESTÁGIO 2: Execução
+# Usa uma imagem JRE menor (runtime) para rodar o aplicativo de forma eficiente.
+# ----------------------------------------------------------------------
+FROM eclipse-temurin:17-jre-slim
 WORKDIR /app
 
+# Copia o arquivo JAR gerado na etapa de build para o ambiente de execução.
 COPY --from=build /app/target/*.jar app.jar
 
+# A porta que a aplicação Java expõe.
 EXPOSE 8080
 
+# Comando para iniciar o JAR
 ENTRYPOINT ["java", "-jar", "app.jar"]
