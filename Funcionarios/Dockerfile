@@ -6,16 +6,16 @@ FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # COPIA OS ARQUIVOS DO PROJETO
-# CORREÇÃO: Copiando diretamente, pois o Build Context já é a pasta "Funcionarios".
+# O Build Context é a pasta Funcionarios, então não precisamos repeti-la.
 COPY pom.xml .
 COPY src ./src
 
-# Executa o build do Maven. O '-DskipTests' é essencial.
-RUN mvn -e -DskipTests package
+# Executa o build do Maven. O '-B clean install' é mais robusto em ambientes Docker.
+RUN mvn -B clean install -DskipTests
 
 # ----------------------------------------------------------------------
 # ESTÁGIO 2: Execução (Runtime)
-# CORREÇÃO: Usando a tag JRE mais estável e comprovada.
+# Usa a imagem Temurin JRE mais estável (17-jre-focal)
 # ----------------------------------------------------------------------
 FROM eclipse-temurin:17-jre-focal
 WORKDIR /app
@@ -28,6 +28,7 @@ EXPOSE 8080
 
 # Comando para iniciar o JAR
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
 
 
 
