@@ -1,9 +1,11 @@
 # Etapa 1: Build da aplicação
+
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
+# Copiar pom.xml e src do subdiretório correto
+COPY "Ste Cores/funcionarios/funcionarios/pom.xml" .
+COPY "Ste Cores/funcionarios/funcionarios/src" ./src
 
 RUN mvn -q -e -DskipTests package
 
