@@ -1,0 +1,381 @@
+/* =========================================
+   === Estilo Base e Estrutura ===
+   ========================================= */
+
+body {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Gradiente de fundo suave */
+    background: linear-gradient(135deg, #f2f4f7, #e0e6ed);
+    color: #333;
+    min-height: 100vh; /* Garante que o rodapé fique embaixo */
+    display: flex;
+    flex-direction: column;
+}
+
+/* === Header === */
+.logo {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(90deg, #004aad, #0066ff);
+    box-shadow: inset 0 -5px 15px rgba(0, 0, 0, 0.2);
+    border-bottom: 3px solid #002b7a;
+}
+
+.logo img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* === Menu === */
+.menu-principal {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    background-color: #f5f5f5;
+    padding: 10px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item {
+    color: #004aad;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 20px;
+    border: 2px solid #004aad;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.menu-item:hover {
+    background-color: #004aad;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* === Conteúdo Principal (Usado para Formulários E Tabelas) === */
+.container {
+    max-width: 1200px; /* Aumentado para acomodar a tabela */
+    margin: 40px auto;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex-grow: 1; /* Garante que o container use o espaço restante */
+}
+
+.container h2 {
+    text-align: center;
+    color: #004aad;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* =========================================
+   === Estilo do Formulário (Formulário) ===
+   ========================================= */
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-weight: 600;
+    color: #004aad;
+}
+
+input,
+select,
+textarea {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #004aad;
+    outline: none;
+}
+
+/* === Botões Padrão (Salvar/Calcular/etc.) === */
+/* Este estilo se aplica ao botão de SALVAR DENTRO DO FORMULÁRIO E MODAL */
+button,
+.menu-item[type="submit"] {
+    background-color: #004aad;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.3s;
+    width: 100%;
+    text-align: center;
+}
+
+button:hover,
+.menu-item[type="submit"]:hover {
+    background-color: #0066ff;
+    transform: translateY(-2px);
+    cursor: pointer;
+}
+
+/* =========================================
+   === Estilo da Tabela de Funcionários/Pagamentos ===
+   ========================================= */
+
+.tabela-funcionarios {
+    width: 100%;
+    border-collapse: collapse; 
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Cabeçalho da Tabela */
+.tabela-funcionarios thead th {
+    background-color: #004aad; 
+    color: #fff;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #002b7a;
+    position: sticky; 
+    top: 0;
+    z-index: 10;
+}
+
+/* Linhas do Corpo */
+.tabela-funcionarios tbody tr {
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.3s ease;
+}
+
+.tabela-funcionarios tbody tr:hover {
+    background-color: #e6f7ff; 
+}
+
+/* Células do Corpo */
+.tabela-funcionarios tbody td {
+    padding: 12px 15px;
+    text-align: left;
+    color: #444;
+}
+
+/* Estilo específico para a página de Pagamentos */
+.tabela-funcionarios tbody td:nth-child(3), /* Valor/Hora em Lista de Funcionários */
+.tabela-funcionarios tbody td:nth-child(4), /* Valor Total */
+.tabela-funcionarios tbody td:nth-child(5) { /* Descontos */
+    text-align: right;
+    font-weight: 500;
+    white-space: nowrap; 
+}
+
+/* Destaque para Valor Líquido (Coluna 6) */
+.tabela-funcionarios tbody td:nth-child(6) { 
+    text-align: right;
+    font-weight: 700; 
+    color: #008000; 
+    white-space: nowrap;
+}
+
+/* Estilo para as Datas e Períodos */
+.tabela-funcionarios tbody td:nth-child(2), /* Período Ref. */
+.tabela-funcionarios tbody td:nth-child(3) { /* Data Registro */
+    font-size: 0.9em;
+    color: #666;
+    white-space: nowrap;
+}
+
+/* === Botões de Ação na Tabela (Editar/Excluir) === */
+
+.btn-editar {
+    background-color: #ffaa00; 
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 5px;
+}
+.btn-editar:hover {
+    background-color: #cc8800;
+}
+
+.btn-excluir {
+    background-color: #ff4d4f; 
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-excluir:hover {
+    background-color: #cc0000;
+    transform: translateY(-1px);
+}
+
+/* =========================================
+   === Estilo de Filtro (btn-filtro) ===
+   ========================================= */
+
+.btn-filtro {
+    background-color: #004aad; /* Azul principal */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px; 
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-filtro:hover {
+    background-color: #0066ff; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-filtro:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.btn-limpar {
+    background-color: #6c757d; 
+}
+
+.btn-limpar:hover {
+    background-color: #5a6268; 
+}
+
+/* =========================================
+   === Estilo do Modal (Para Edição) ===
+   ========================================= */
+
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 100; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); 
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; 
+    padding: 30px;
+    border: 1px solid #ccc;
+    width: 90%;
+    max-width: 500px; 
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* =========================================
+   === Rodapé ===
+   ========================================= */
+
+.rodape {
+    background-color: #004aad;
+    color: #f5f5f5;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 50px;
+}
+
+.rodape-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* =========================================
+   === Responsivo ===
+   ========================================= */
+
+@media (max-width: 900px) {
+    .container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+        margin: 15px;
+    }
+    
+    .menu-principal {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .menu-item {
+        font-size: 16px;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    /* Reduz o padding nas células da tabela em telas muito pequenas */
+    .tabela-funcionarios tbody td,
+    .tabela-funcionarios thead th {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 14px;
+    }
+    
+    .modal-content {
+        margin: 15% auto;
+        padding: 20px;
+    }
+}
