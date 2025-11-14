@@ -7,8 +7,8 @@ WORKDIR /app
 
 # COPIA OS ARQUIVOS DO PROJETO
 # O caminho 'funcionarios' deve ser o nome exato da sua pasta no repositório.
-COPY funcionarios/pom.xml .
-COPY funcionarios/src ./src
+COPY Funcionarios/pom.xml .
+COPY Funcionarios/src ./src
 
 # Executa o build do Maven. O '-DskipTests' é essencial.
 RUN mvn -e -DskipTests package
@@ -28,6 +28,7 @@ EXPOSE 8080
 
 # Comando para iniciar o JAR
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
 
 
 
