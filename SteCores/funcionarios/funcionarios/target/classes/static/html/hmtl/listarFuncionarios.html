@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Funcionários</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../../css/Funcionarios.css">
+</head>
+<body>
+
+    <header class="logo">
+        <img src="img/Logo.jpg" alt="Logo da empresa">
+    </header>
+
+    <nav class="menu-principal">
+        <a href="index.html" class="menu-item">Início</a>
+        <a href="cadastrarFuncionario.html" class="menu-item">Cadastrar Funcionário</a>
+        <a href="registroHora.html" class="menu-item">Registrar Horas</a>
+        <a href="pagamentos.html" class="menu-item">Registrar Pagamento</a>
+        <a href="historicoPagamentos.html" class="menu-item">Histórico de Pagamentos</a>
+    </nav>
+
+    <main class="container">
+        <h2>Lista de Funcionários</h2>
+
+        <table id="tabelaFuncionarios" class="tabela-funcionarios">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Cargo</th>
+                    <th style="text-align: right;">Valor/Hora</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main>
+
+    <div id="modalEditar" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal()">&times;</span>
+            <h3>Editar Funcionário</h3>
+            <form id="formEditarFuncionario" class="formulario"> <input type="hidden" id="editId">
+                <label for="editNome">Nome:</label>
+                <input type="text" id="editNome" required>
+                <label for="editCargo">Cargo:</label>
+                <input type="text" id="editCargo" required>
+                <label for="editValorHora">Valor/Hora:</label>
+                <input type="number" id="editValorHora" step="0.01" required>
+                <button type="submit" style="margin-top: 15px;">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="rodape">
+        <div class="rodape-container">
+            <p>&copy; 2025 Sistema Sete Cores Funcionários</p>
+        </div>
+    </footer>
+
+    <script>
+        // Variável global para o endpoint
+        const API_URL = "http://localhost:8080";
+        
+        // Formatador de moeda para Valor/Hora
+        const formatadorMoeda = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
+
+        async function carregarFuncionarios() {
+            try {
+                const response = await fetch(`${API_URL}/funcionarios`);
+                if (!response.ok) throw new Error("Erro ao carregar funcionários");
+
+                const funcionarios = await response.json();
+                const tabela = document.querySelector("#tabelaFuncionarios tbody");
+                tabela.innerHTML = "";
+
+                if (funcionarios.length === 0) {
+                    tabela.innerHTML = `<tr><td colspan="4" style="text-align:center;">Nenhum funcionário cadastrado.</td></tr>`;
+                    return;
+                }
+
+                funcionarios.forEach(f => {
+                    const row = document.createElement("tr");
+                    // Prepara os valores para o modal: substitui aspas simples para evitar quebras no onclick
+                    const nomeEscapado = f.nome ? f.nome.replace(/'/g, "\\'") : ''; 
+                    const cargoEscapado = f.cargo ? f.cargo.replace(/'/g, "\\'") : '';
+                    
+                    row.innerHTML = `
+                        <td>${f.nome}</td>
+                        <td>${f.cargo}</td>
+                        <td style="text-align: right;">${formatadorMoeda.format(f.valorHora)}</td>
+                        <td>
+                            <button class="btn-editar" onclick="abrirModal(${f.id}, '${nomeEscapado}', '${cargoEscapado}', ${f.valorHora})">Editar</button>
+                            <button class="btn-excluir" onclick="excluirFuncionario(${f.id})">Excluir</button>
+                        </td>
+                    `;
+                    tabela.appendChild(row);
+                });
+            } catch (error) {
+                console.error(error);
+                alert("❌ Erro ao carregar funcionários.");
+            }
+        }
+
+        async function excluirFuncionario(id) {
+            if (confirm("Deseja realmente excluir este funcionário?")) {
+                try {
+                    const response = await fetch(`${API_URL}/funcionarios/${id}`, { method: "DELETE" });
+                    if (response.ok) {
+                        alert("Funcionário excluído com sucesso!");
+                        carregarFuncionarios();
+                    } else {
+                        // Tenta obter a mensagem de erro do servidor
+                        const errorText = await response.text();
+                        alert(`❌ Erro ao excluir funcionário. Detalhe: ${errorText}`);
+                    }
+                } catch (error) {
+                    alert("❌ Falha na conexão com o servidor.");
+                    console.error(error);
+                }
+            }
+        }
+
+        // --- Funções do Modal ---
+        const modal = document.getElementById("modalEditar");
+
+        function abrirModal(id, nome, cargo, valorHora) {
+            modal.style.display = "block";
+            document.getElementById("editId").value = id;
+            document.getElementById("editNome").value = nome;
+            document.getElementById("editCargo").value = cargo;
+            document.getElementById("editValorHora").value = valorHora;
+        }
+
+        function fecharModal() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) fecharModal();
+        }
+
+        // Atualizar funcionário
+        document.getElementById("formEditarFuncionario").addEventListener("submit", async e => {
+            e.preventDefault();
+            const id = document.getElementById("editId").value;
+            const funcionario = {
+                nome: document.getElementById("editNome").value.trim(),
+                cargo: document.getElementById("editCargo").value.trim(),
+                valorHora: parseFloat(document.getElementById("editValorHora").value)
+            };
+            
+            // Validação simples
+            if (isNaN(funcionario.valorHora) || funcionario.valorHora < 0) {
+                 alert("O valor/hora deve ser um número positivo.");
+                 return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/funcionarios/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(funcionario)
+                });
+                if (response.ok) {
+                    alert("Funcionário atualizado com sucesso!");
+                    fecharModal();
+                    carregarFuncionarios();
+                } else {
+                    const errorText = await response.text();
+                    alert(`❌ Erro ao atualizar funcionário. Detalhe: ${errorText}`);
+                }
+            } catch (error) {
+                alert("❌ Falha na conexão com o servidor.");
+                console.error(error);
+            }
+        });
+
+        // Carrega a lista ao iniciar
+        carregarFuncionarios();
+    </script>
+</body>
+</html>
