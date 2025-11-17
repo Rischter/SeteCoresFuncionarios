@@ -1,4 +1,4 @@
-package com.setecores.Controller;
+package com.setecores.Controller; // Use o nome do seu pacote correto
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +8,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index() {
-        return "index"; // templates/index.html
+        // Redireciona diretamente para o recurso estático "index.html"
+        return "redirect:/index.html"; 
     }
 }
