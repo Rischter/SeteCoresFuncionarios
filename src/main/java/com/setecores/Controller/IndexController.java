@@ -8,7 +8,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index() {
-        // Tenta retornar "index" como o nome de uma view/template
+        // Retorna "index" como o nome de uma view (eliminando o 'redirect')
         return "index"; 
     }
 }
